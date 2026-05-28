@@ -1,0 +1,110 @@
+import { useState } from "react";
+import { Card } from "./components/Card";
+import { CreateCasePanel } from "./components/CreateCasePanel";
+import { reservationContext } from "./mockData";
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="infoRow">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+export function App() {
+  const [casePanelOpen, setCasePanelOpen] = useState(false);
+
+  return (
+    <div className={casePanelOpen ? "appShell panelOpen" : "appShell"}>
+      <aside className="leftRail" aria-label="Main navigation wireframe">
+        <div className="brandMark">A</div>
+        <nav>
+          <span>＋</span>
+          <span>⌂</span>
+          <span>▣</span>
+          <span>☰</span>
+          <span className="activeNav">▤</span>
+        </nav>
+        <div className="avatar">MI</div>
+      </aside>
+
+      <main className="page">
+        <header className="topBar">
+          <div>
+            <p className="breadcrumb">Reservations / {reservationContext.reservationId}</p>
+            <div className="titleRow">
+              <h1>{reservationContext.guestName}</h1>
+              <span className="pill success">Direct</span>
+              <span className="pill danger">Access issue</span>
+            </div>
+            <p className="metaLine">
+              {reservationContext.unitSku} · {reservationContext.stayDates} · {reservationContext.nights} nights
+            </p>
+          </div>
+          <div className="topActions">
+            <button className="primaryButton" type="button" onClick={() => setCasePanelOpen(true)}>
+              ＋ Add case
+            </button>
+            <button className="secondaryButton" type="button">Unit</button>
+            <button className="secondaryButton" type="button">Booking</button>
+          </div>
+        </header>
+
+        <div className="contentGrid">
+          <div className="mainColumn">
+            <Card title="Reservation info">
+              <InfoRow label="Reservation ID" value={reservationContext.reservationId} />
+              <InfoRow label="ETA" value={reservationContext.eta} />
+              <InfoRow label="ETD" value={reservationContext.etd} />
+              <InfoRow label="Unit SKU" value={reservationContext.unitSku} />
+              <InfoRow label="Listing" value={reservationContext.listingName} />
+            </Card>
+
+            <Card title="Latest guest message">
+              <div className="messageBubble">
+                <div className="messageHeader">
+                  <strong>{reservationContext.guestName}</strong>
+                  <span>Just now</span>
+                </div>
+                <p>{reservationContext.latestGuestMessage}</p>
+              </div>
+            </Card>
+
+            <Card title="Access context">
+              <InfoRow label="Access method" value={reservationContext.accessMethod} />
+              <InfoRow label="Backup access" value={reservationContext.backupAccessAvailable ? "Available" : "Not available"} />
+              <InfoRow label="Smart lock battery" value={`${reservationContext.smartLockBatteryPercent}%`} />
+              <InfoRow label="Recent messages" value={`${reservationContext.recentMessageCount} in 8 minutes`} />
+              <div className="attentionNote">{reservationContext.similarIssueNote}</div>
+            </Card>
+          </div>
+
+          <div className="sideColumn">
+            <Card title="Guest">
+              <InfoRow label="Email" value={reservationContext.guestEmail} />
+              <InfoRow label="Phone" value={reservationContext.guestPhone} />
+              <InfoRow label="Address" value={reservationContext.listingAddress} />
+            </Card>
+
+            <Card title="Payment" action={<span className="pill success">{reservationContext.paymentStatus}</span>}>
+              <InfoRow label="Accommodation" value="€197,00" />
+              <InfoRow label="Cleaning fee" value="€20,00" />
+              <InfoRow label="Total" value="€217,00" />
+            </Card>
+
+            <Card title="Open cases">
+              <p className="emptyState">No open cases for this reservation.</p>
+            </Card>
+          </div>
+        </div>
+      </main>
+
+      <CreateCasePanel
+        open={casePanelOpen}
+        reservation={reservationContext}
+        onClose={() => setCasePanelOpen(false)}
+      />
+    </div>
+  );
+}
