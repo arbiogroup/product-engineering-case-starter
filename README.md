@@ -14,6 +14,13 @@ The starter already includes:
 - a placeholder side panel where the create-case flow should live
 - plain CSS with no Tailwind setup
 
+
+## Starter wireframe
+
+The starter app intentionally uses a simple mocked reservation page, not a real Arbio page.
+
+![Starter wireframe](docs/starter-wireframe.png)
+
 ## Setup
 
 ```bash
